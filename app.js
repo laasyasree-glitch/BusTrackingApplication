@@ -41,7 +41,7 @@ const authenticationToken = (req, res, next) => {
         res.status(401);
         res.send("Invalid JWT Token");
       } else {
-        req.name = payload.name;
+        req.user_name = payload.user_name;
         next();
       }
     });
@@ -79,6 +79,41 @@ app.get("/user/:user_id", authenticationToken, async (req, res) => {
   const obj = { susses: true, data: result };
 
   res.send(obj);
+});
+
+app.post("/users/", async (request, response) => {
+  const {
+    username,
+    password,
+    phone_number,
+    email_id,
+    organization_id,
+    default_bus_id,
+    my_stop,
+  } = request.body;
+  const selectUserQuery = `SELECT * FROM user WHERE user_name = '${user_name}'`;
+  const dbUser = await db.get(selectUserQuery);
+  if (dbUser === undefined) {
+    const createUserQuery = `
+      INSERT INTO 
+        user (username, password, phone_number,email_id,organization_id,default_bus_id,my_stop) 
+      VALUES 
+        (
+          '${username}', 
+          '${password}',
+          '${phone_number}', 
+          '${email_id}',
+          '${organization_id}',
+          '${default_bus_id}',
+          '${my_stop}'
+        )`;
+    const dbResponse = await db.run(createUserQuery);
+    const newUserId = dbResponse.lastID;
+    response.send(`Created new user with ${newUserId}`);
+  } else {
+    response.status = 400;
+    response.send("User already exists");
+  }
 });
 
 module.exports = app;
