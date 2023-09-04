@@ -1,0 +1,11 @@
+post http://localhost:3020/login
+Content-Type: application/json
+
+{
+  "user_name": "Laasya",
+  "password":"lassya@2002"
+}
+
+###
+get http://localhost:3020/user/1
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJMYWFzeWEiLCJpYXQiOjE2OTM4Mzg4MzZ9.qK97GLP1hZ8ULNq_5LXFCMwAVGrzoOzVJRZwLRV-JKk
