@@ -1,10 +1,18 @@
+//Import Statements
+
 const express = require("express");
 const path = require("path");
 const { open } = require("sqlite");
 const sqlite3 = require("sqlite3");
 const jwt = require("jsonwebtoken");
+
+//Utilities
 const app = express();
 app.use(express.json());
+const cors = require("cors");
+app.use(cors());
+
+//Database Initialization
 let db = null;
 console.log("Hello");
 const dbPath = path.join(__dirname, "busApplication.db");
@@ -68,6 +76,7 @@ app.post("/login/", async (req, res) => {
   }
 });
 
+//Get Specific User
 app.get("/user/:user_id", authenticationToken, async (req, res) => {
   const { user_id } = req.params;
 
@@ -81,6 +90,19 @@ app.get("/user/:user_id", authenticationToken, async (req, res) => {
   res.send(obj);
 });
 
+//Get all users
+app.get("/users/", authenticationToken, async (req, res) => {
+  const getQuery = `
+       select * from user
+    `;
+
+  const result = await db.all(getQuery);
+  const obj = { susses: true, data: result };
+
+  res.send(obj);
+});
+
+//Add new user
 app.post("/users/", async (request, response) => {
   const {
     username,
@@ -113,6 +135,110 @@ app.post("/users/", async (request, response) => {
   } else {
     response.status = 400;
     response.send("User already exists");
+  }
+});
+
+//Get Specific driver details
+app.get("/driver/:driver_id", authenticationToken, async (req, res) => {
+  const { driver_id } = req.params;
+
+  const getQuery = `
+       select * from driver where driver_id=${driver_id}
+    `;
+
+  const result = await db.get(getQuery);
+  const obj = { susses: true, data: result };
+
+  res.send(obj);
+});
+
+//Get drivers list
+app.get("/drivers/", authenticationToken, async (req, res) => {
+  const getQuery = `
+       select * from driver
+    `;
+
+  const result = await db.all(getQuery);
+  const obj = { susses: true, data: result };
+
+  res.send(obj);
+});
+
+//Add new driver
+app.post("/driver/", async (request, response) => {
+  const { driver_name, phone_number, location, bus_id } = request.body;
+  const selectUserQuery = `SELECT * FROM driver WHERE driver_name = '${driver_name}'`;
+  const dbUser = await db.get(selectUserQuery);
+  if (dbUser === undefined) {
+    const createUserQuery = `
+      INSERT INTO 
+       driver (driver_name,phone_number,location,bus_id) 
+      VALUES 
+        (
+          '${driver_name}', 
+          '${phone_number}',
+          '${location}', 
+          '${bus_id}'
+        )`;
+    const dbResponse = await db.run(createUserQuery);
+    const newUserId = dbResponse.lastID;
+    response.send(`Created new user with ${newUserId}`);
+  } else {
+    response.status = 400;
+    response.send(
+      "User already exists, if you want to update driver details click on update"
+    );
+  }
+});
+
+//Get Specific Bus details
+app.get("/bus/:bus_id", authenticationToken, async (req, res) => {
+  const { bus_id } = req.params;
+
+  const getQuery = `
+       select * from bus where bus_id=${bus_id}
+    `;
+
+  const result = await db.get(getQuery);
+  const obj = { susses: true, data: result };
+
+  res.send(obj);
+});
+
+//Get drivers list
+app.get("/buses/", authenticationToken, async (req, res) => {
+  const getQuery = `
+       select * from bus
+    `;
+
+  const result = await db.all(getQuery);
+  const obj = { susses: true, data: result };
+
+  res.send(obj);
+});
+
+//Add new driver
+app.post("/bus/", async (request, response) => {
+  const { bus_number, number_plate } = request.body;
+  const selectUserQuery = `SELECT * FROM driver WHERE bus_number = '${bus_number}'`;
+  const dbUser = await db.get(selectUserQuery);
+  if (dbUser === undefined) {
+    const createUserQuery = `
+      INSERT INTO 
+       bus (bus_number,number_plate) 
+      VALUES 
+        (
+          '${bus_number}', 
+          '${number_plate}',
+        )`;
+    const dbResponse = await db.run(createUserQuery);
+    const newUserId = dbResponse.lastID;
+    response.send(`Created new user with ${newUserId}`);
+  } else {
+    response.status = 400;
+    response.send(
+      "User already exists, if you want to update driver details click on update"
+    );
   }
 });
 
