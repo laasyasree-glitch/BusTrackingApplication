@@ -138,6 +138,137 @@ app.post("/users/", async (request, response) => {
   }
 });
 
+//Update user details
+app.put(
+  "/users/:user_id/phone_number",
+  authenticationToken,
+  async (req, res) => {
+    const { user_id } = req.params; // Extract user_id from request parameters
+    const { phone_number } = req.body;
+
+    try {
+      // Check if the user exists
+      const selectUserQuery = `SELECT * FROM user WHERE user_id = ?`;
+      const dbUser = await db.get(selectUserQuery, [user_id]);
+
+      if (!dbUser) {
+        res.status(400).send("User doesn't exist");
+      } else {
+        // Update the phone number
+        const updateUserQuery = `UPDATE user SET phone_number = ? WHERE user_id = ?`;
+        await db.run(updateUserQuery, [phone_number, user_id]);
+
+        res.send(`Phone number updated`);
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
+
+app.put("/users/:user_id/email_id", authenticationToken, async (req, res) => {
+  const { user_id } = req.params; // Extract user_id from request parameters
+  const { email_id } = req.body;
+
+  try {
+    // Check if the user exists
+    const selectUserQuery = `SELECT * FROM user WHERE user_id = ?`;
+    const dbUser = await db.get(selectUserQuery, [user_id]);
+
+    if (!dbUser) {
+      res.status(400).send("User doesn't exist");
+    } else {
+      // Update the email_id
+      const updateUserQuery = `UPDATE user SET email_id = ? WHERE user_id = ?`;
+      await db.run(updateUserQuery, [email_id, user_id]);
+
+      res.send(`Email ID updated`);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+//Update default bus ID
+app.put(
+  "/users/:user_id/default_bus_id",
+  authenticationToken,
+  async (req, res) => {
+    const { user_id } = req.params; // Extract user_id from request parameters
+    const { default_bus_id } = req.body;
+
+    try {
+      // Check if the user exists
+      const selectUserQuery = `SELECT * FROM user WHERE user_id = ?`;
+      const dbUser = await db.get(selectUserQuery, [user_id]);
+
+      if (!dbUser) {
+        res.status(400).send("User doesn't exist");
+      } else {
+        // Update the email_id
+        const updateUserQuery = `UPDATE user SET email_id = ? WHERE user_id = ?`;
+        await db.run(updateUserQuery, [default_bus_id, user_id]);
+
+        res.send(`Bus ID updated`);
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
+
+//Update My_Stop
+app.put("/users/:user_id/my_stop", authenticationToken, async (req, res) => {
+  const { user_id } = req.params; // Extract user_id from request parameters
+  const { my_stop } = req.body;
+
+  try {
+    // Check if the user exists
+    const selectUserQuery = `SELECT * FROM user WHERE user_id = ?`;
+    const dbUser = await db.get(selectUserQuery, [user_id]);
+
+    if (!dbUser) {
+      res.status(400).send("User doesn't exist");
+    } else {
+      // Update the email_id
+      const updateUserQuery = `UPDATE user SET email_id = ? WHERE user_id = ?`;
+      await db.run(updateUserQuery, [default_bus_id, my_stop]);
+
+      res.send(`Stop details updated`);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Delete User
+app.delete("/users/:user_id", authenticationToken, async (req, res) => {
+  const { user_id } = req.params;
+
+  try {
+    // Check if the user exists
+    const selectUserQuery = `SELECT * FROM user WHERE user_id = ?`;
+    const dbUser = await db.get(selectUserQuery, [user_id]);
+
+    if (!dbUser) {
+      res.status(404).send("User not found");
+    } else {
+      // Delete the user
+      const deleteUserQuery = `DELETE FROM user WHERE user_id = ?`;
+      await db.run(deleteUserQuery, [user_id]);
+
+      res.send(`User with ID ${user_id} deleted`);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 //Get Specific driver details
 app.get("/driver/:driver_id", authenticationToken, async (req, res) => {
   const { driver_id } = req.params;
@@ -191,6 +322,84 @@ app.post("/driver/", async (request, response) => {
   }
 });
 
+//Update driver phone number
+app.put(
+  "/users/:user_id/phone_number",
+  authenticationToken,
+  async (req, res) => {
+    const { driver_id } = req.params; // Extract user_id from request parameters
+    const { phone_number } = req.body;
+
+    try {
+      // Check if the user exists
+      const selectUserQuery = `SELECT * FROM driver WHERE driver_id = ?`;
+      const dbUser = await db.get(selectUserQuery, [driver_id]);
+
+      if (!dbUser) {
+        res.status(400).send("User doesn't exist");
+      } else {
+        // Update the phone number
+        const updateUserQuery = `UPDATE driver SET phone_number = ? WHERE driver_id = ?`;
+        await db.run(updateUserQuery, [phone_number, driver_id]);
+
+        res.send(`Phone number updated`);
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
+
+//Update driver location
+app.put("/users/:user_id/location", authenticationToken, async (req, res) => {
+  const { driver_id } = req.params; // Extract user_id from request parameters
+  const { phone_number } = req.body;
+
+  try {
+    // Check if the user exists
+    const selectUserQuery = `SELECT * FROM driver WHERE driver_id = ?`;
+    const dbUser = await db.get(selectUserQuery, [driver_id]);
+
+    if (!dbUser) {
+      res.status(400).send("Driver doesn't exist");
+    } else {
+      // Update the phone number
+      const updateUserQuery = `UPDATE driver SET location = ? WHERE driver_id = ?`;
+      await db.run(updateUserQuery, [location, driver_id]);
+
+      res.send(`Location is updated`);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Delete Driver
+app.delete("/drivers/:driver_id", authenticationToken, async (req, res) => {
+  const { driver_id } = req.params;
+
+  try {
+    // Check if the driver exists
+    const selectDriverQuery = `SELECT * FROM driver WHERE driver_id = ?`;
+    const dbDriver = await db.get(selectDriverQuery, [driver_id]);
+
+    if (!dbDriver) {
+      res.status(404).send("Driver not found");
+    } else {
+      // Delete the driver
+      const deleteDriverQuery = `DELETE FROM driver WHERE driver_id = ?`;
+      await db.run(deleteDriverQuery, [driver_id]);
+
+      res.send(`Driver with ID ${driver_id} deleted`);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 //Get Specific Bus details
 app.get("/bus/:bus_id", authenticationToken, async (req, res) => {
   const { bus_id } = req.params;
@@ -205,7 +414,7 @@ app.get("/bus/:bus_id", authenticationToken, async (req, res) => {
   res.send(obj);
 });
 
-//Get drivers list
+//Get Buses list
 app.get("/buses/", authenticationToken, async (req, res) => {
   const getQuery = `
        select * from bus
@@ -217,7 +426,7 @@ app.get("/buses/", authenticationToken, async (req, res) => {
   res.send(obj);
 });
 
-//Add new driver
+//Add new Bus
 app.post("/bus/", async (request, response) => {
   const { bus_number, number_plate } = request.body;
   const selectUserQuery = `SELECT * FROM driver WHERE bus_number = '${bus_number}'`;
@@ -239,6 +448,86 @@ app.post("/bus/", async (request, response) => {
     response.send(
       "User already exists, if you want to update driver details click on update"
     );
+  }
+});
+
+//Update bus number
+app.put("/bus/:bus_id/bus_number", authenticationToken, async (req, res) => {
+  const { bus_id } = req.params; // Extract user_id from request parameters
+  const { bus_number } = req.body;
+
+  try {
+    // Check if the user exists
+    const selectUserQuery = `SELECT * FROM bus WHERE bus_id = ?`;
+    const dbUser = await db.get(selectUserQuery, [bus_id]);
+
+    if (!dbUser) {
+      res.status(400).send("User doesn't exist");
+    } else {
+      // Update the phone number
+      const updateUserQuery = `UPDATE bus SET bus_number = ? WHERE bus_id = ?`;
+      await db.run(updateUserQuery, [bus_number, bus_id]);
+
+      res.send(`Bus number updated`);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Delete Bus
+app.delete("/buses/:bus_id", authenticationToken, async (req, res) => {
+  const { bus_id } = req.params;
+
+  try {
+    // Check if the bus exists
+    const selectBusQuery = `SELECT * FROM bus WHERE bus_id = ?`;
+    const dbBus = await db.get(selectBusQuery, [bus_id]);
+
+    if (!dbBus) {
+      res.status(404).send("Bus not found");
+    } else {
+      // Delete the bus
+      const deleteBusQuery = `DELETE FROM bus WHERE bus_id = ?`;
+      await db.run(deleteBusQuery, [bus_id]);
+
+      res.send(`Bus with ID ${bus_id} deleted`);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+const nodemailer = require("nodemailer");
+
+// Create a transporter for sending emails (you need to configure this)
+const transporter = nodemailer.createTransport({
+  service: "YourEmailService",
+  auth: {
+    user: "your_email@example.com",
+    pass: "your_email_password",
+  },
+});
+
+// Send an email notification
+app.post("/send-notification", authenticationToken, async (req, res) => {
+  const { recipientEmail, subject, message } = req.body;
+
+  try {
+    // Send the email
+    await transporter.sendMail({
+      from: "your_email@example.com",
+      to: recipientEmail,
+      subject: subject,
+      text: message,
+    });
+
+    res.send("Notification sent successfully");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Failed to send notification");
   }
 });
 
