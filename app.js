@@ -500,35 +500,35 @@ app.delete("/buses/:bus_id", authenticationToken, async (req, res) => {
   }
 });
 
-const nodemailer = require("nodemailer");
+// const nodemailer = require("nodemailer");
 
-// Create a transporter for sending emails (you need to configure this)
-const transporter = nodemailer.createTransport({
-  service: "YourEmailService",
-  auth: {
-    user: "your_email@example.com",
-    pass: "your_email_password",
-  },
-});
+// // Create a transporter for sending emails (you need to configure this)
+// const transporter = nodemailer.createTransport({
+//   service: "YourEmailService",
+//   auth: {
+//     user: "your_email@example.com",
+//     pass: "your_email_password",
+//   },
+// });
 
-// Send an email notification
-app.post("/send-notification", authenticationToken, async (req, res) => {
-  const { recipientEmail, subject, message } = req.body;
+// // Send an email notification
+// app.post("/send-notification", authenticationToken, async (req, res) => {
+//   const { recipientEmail, subject, message } = req.body;
 
-  try {
-    // Send the email
-    await transporter.sendMail({
-      from: "your_email@example.com",
-      to: recipientEmail,
-      subject: subject,
-      text: message,
-    });
+//   try {
+//     // Send the email
+//     await transporter.sendMail({
+//       from: "your_email@example.com",
+//       to: recipientEmail,
+//       subject: subject,
+//       text: message,
+//     });
 
-    res.send("Notification sent successfully");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Failed to send notification");
-  }
-});
+//     res.send("Notification sent successfully");
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Failed to send notification");
+//   }
+// });
 
 module.exports = app;
